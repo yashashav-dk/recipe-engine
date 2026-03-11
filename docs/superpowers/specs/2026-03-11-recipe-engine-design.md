@@ -43,7 +43,7 @@ equipment:
 storage:
   fridge_days: 5
   freezer_days: 30
-  reheating: "Microwave 2-3 mins or air-fry at 375°F for 5 mins"
+  reheating: "Microwave 2-3 mins or air-fry at 190°C for 5 mins"
 cost_per_serving_usd: 1.50
 tags:
   - high-protein
@@ -68,6 +68,25 @@ notes: "Scales well to 2x. Use pot-in-pot method to cook rice simultaneously. Ne
 - Volume: `ml`, `L`
 - Count: `piece`, `clove`, `sprig`, `bunch` (for items that don't weigh/measure well)
 
+Note: Free-text fields (`notes`, `reheating`, `steps`) are not unit-enforced, but prefer metric when writing them.
+
+### Filename convention
+
+YAML files use kebab-case matching the recipe name: `chicken-tikka.yaml`, `black-bean-soup.yaml`. The generate script derives output filenames from these (e.g., `docs/chicken-tikka.md`).
+
+### Category field
+
+Controlled vocabulary for the primary role of the dish:
+- `protein` — main protein source
+- `grain` — rice, pasta, bread
+- `side` — vegetables, salads
+- `sauce` — chutneys, sauces, marinades
+- `snack` — lighter items
+- `dessert`
+- `drink` — smoothies, shakes
+
+Use `tags` for cross-cutting concerns (dietary, cooking method, etc). `category` is optional.
+
 ### Status field
 
 - `draft` — idea or untested recipe (default)
@@ -82,7 +101,7 @@ notes: "Scales well to 2x. Use pot-in-pot method to cook rice simultaneously. Ne
 appliances:
   - id: instant-pot
     name: Instant Pot Duo
-    size: 6 quart
+    size: 5.7L
     notes: "Supports pot-in-pot method with inner pots"
   - id: air-fryer
     name: Gourmia Air Fryer
@@ -101,7 +120,7 @@ measuring:
     name: 250ml Measuring Cup
 ```
 
-Recipes reference appliances by `id`. The generate script cross-references to warn about unknown equipment IDs.
+Recipes reference equipment by `id` (from any category — appliances, containers, or measuring). The generate script cross-references to warn about unknown equipment IDs. The `containers` and `measuring` sections are primarily for inventory tracking but can be referenced in recipes if relevant.
 
 ## Scripts
 
@@ -130,9 +149,11 @@ CLI tool that generates a weekly batch cooking plan.
 - `--status` — only include `tested` or `staple` recipes (default: exclude `draft`)
 
 **Output:**
-- Shopping list — combined ingredients across selected recipes, in metric, deduped
+- Shopping list — combined ingredients across selected recipes, in metric. Deduplication is string-match only (exact `item` name + compatible `unit`). Standardize ingredient names across recipes for best results.
 - Cook schedule — what to cook, prep order, estimated time
 - Storage plan — fridge vs freezer allocation, eat-by dates
+
+**Selection strategy:** Pick recipes randomly from the filtered set, adding them until the weekly servings target is met or the budget cap is reached. Avoid repeating the same recipe in a single week when possible. Recipes missing `servings` are skipped when budget filtering is active (since total cost cannot be computed). When `generate.py` outputs missing-field warnings, missing `servings` on a recipe with `cost_per_serving_usd` is flagged.
 
 **Example:**
 ```bash
@@ -146,7 +167,20 @@ python scripts/meal_planner.py --tags high-protein --max-budget-per-week 40
 pyyaml
 ```
 
-No heavy frameworks. Standard library for everything else (argparse, pathlib, etc).
+No heavy frameworks. Standard library for everything else (argparse, pathlib, etc). Requires Python 3.8+.
+
+### `.gitignore`
+
+```
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+```
+
+### Display behavior for optional fields
+
+When `generate.py` encounters missing optional fields, it simply omits that section from the generated markdown. No "not specified" placeholders.
 
 ## Repo Settings
 
