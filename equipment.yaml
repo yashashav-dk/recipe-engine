@@ -8,6 +8,8 @@ appliances:
     size: medium
   - id: blender
     name: Vitamix E Series
+  - id: magic-bullet
+    name: Magic Bullet
 
 containers:
   - id: glass-2l

@@ -68,3 +68,7 @@ Personal batch cooking recipe collection.
 
 - [Chicken Tikka](docs/chicken-tikka.md)
 - [Spicy Chicken Tikka Masala](docs/spicy-chicken-tikka-masala.md)
+
+### Magic Bullet
+
+- [Spicy Chicken Tikka Masala](docs/spicy-chicken-tikka-masala.md)
