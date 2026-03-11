@@ -202,3 +202,40 @@ def generate_readme(
             lines.append("")
 
     return "\n".join(lines)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate markdown docs from recipe YAML files")
+    parser.add_argument(
+        "--root",
+        type=Path,
+        default=Path(__file__).parent.parent,
+        help="Root directory of the recipe-engine repo",
+    )
+    args = parser.parse_args()
+
+    root = args.root
+    recipes_dir = root / "recipes"
+    docs_dir = root / "docs"
+    equip_path = root / "equipment.yaml"
+
+    docs_dir.mkdir(exist_ok=True)
+
+    # Load data
+    recipes = load_all_recipes(recipes_dir)
+    equipment = load_equipment(equip_path)
+
+    # Generate per-recipe markdown
+    for recipe in recipes:
+        md = recipe_to_markdown(recipe)
+        (docs_dir / f"{recipe['slug']}.md").write_text(md)
+
+    # Generate README
+    readme = generate_readme(recipes, equipment["all_ids"], equipment["by_id"])
+    (root / "README.md").write_text(readme)
+
+    print(f"Generated docs for {len(recipes)} recipes.")
+
+
+if __name__ == "__main__":
+    main()

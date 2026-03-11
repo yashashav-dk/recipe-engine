@@ -152,3 +152,40 @@ def test_generate_readme_warns_unknown_equipment(capsys):
     generate_readme(recipes, set(), {})
     captured = capsys.readouterr()
     assert "unknown-gadget" in captured.err
+
+
+import subprocess
+import sys
+
+
+def test_generate_cli_integration(tmp_path):
+    """End-to-end test: run generate.py against sample recipes."""
+    # Set up a mini repo structure
+    recipes_dir = tmp_path / "recipes"
+    recipes_dir.mkdir()
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    (recipes_dir / "test-recipe.yaml").write_text(
+        "name: Test Recipe\nstatus: tested\ncuisine: Indian\n"
+        "servings: 4\ntags:\n  - quick\n"
+    )
+    equip_file = tmp_path / "equipment.yaml"
+    equip_file.write_text(
+        "appliances:\n  - id: instant-pot\n    name: Instant Pot\n"
+    )
+
+    script = Path(__file__).parent.parent / "scripts" / "generate.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--root", str(tmp_path)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0
+
+    # Check docs/test-recipe.md was created
+    doc = (docs_dir / "test-recipe.md").read_text()
+    assert "# Test Recipe" in doc
+
+    # Check README.md was created
+    readme = (tmp_path / "README.md").read_text()
+    assert "Test Recipe" in readme

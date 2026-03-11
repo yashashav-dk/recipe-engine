@@ -12,15 +12,15 @@
 
 ## Ingredients
 
-- 800 g chicken breast (4 pieces, cut into 3cm chunks)
+- 800 g chicken breast
 - 185 ml great value greek plain yogurt
 - 15 g three mangoes chicken masala
 - 10 g kashmiri red chilli powder
 - 5 g red chilli powder
 - 3 g turmeric
 - 5 g garam masala
-- 300 g onion (2 large, diced)
-- 820 g great value tomato puree 29oz (entire can)
+- 300 g onion
+- 820 g great value tomato puree 29oz
 - 30 g ginger garlic paste
 - 45 ml oil
 - 2 g kasuri methi
@@ -53,3 +53,4 @@
 ## Notes
 
 Day 2-3 tastes best as spices meld. Gravy thickens in fridge overnight — normal and good. Browning the onion paste (step 6) is where 70% of the flavor comes from. Using the full 29oz tomato puree can makes the curry saucier, which keeps chicken moist all week. Serve with quinoa or ready-made chapathi. Three Mangoes Chicken Masala from Swastik Spices adds the Telugu-style spice base. Grocery: Walmart Great Value tomato puree + Greek yogurt. Everything else from pantry.
+
