@@ -1,0 +1,23 @@
+appliances:
+  - id: instant-pot
+    name: Instant Pot Duo
+    size: 5.7L
+    notes: "Supports pot-in-pot method with inner pots"
+  - id: air-fryer
+    name: Gourmia Air Fryer
+    size: medium
+  - id: blender
+    name: Vitamix E Series
+  - id: magic-bullet
+    name: Magic Bullet
+    notes: "Great for small batches — spice pastes, ginger garlic paste, onion puree"
+
+containers:
+  - id: glass-2l
+    name: 2L Glass Batch Container
+    count: 2
+    capacity_liters: 2
+
+measuring:
+  - id: measuring-cup-250ml
+    name: 250ml Measuring Cup
