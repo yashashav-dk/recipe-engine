@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recipe Engine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site-header">
+    <h1>Recipe Engine</h1>
+  </div>
+
+  {% for cuisine, recipes in groups %}
+  <div class="cuisine-group">
+    <h2>{{ cuisine }}</h2>
+    {% for recipe in recipes %}
+    <div class="recipe-row{% if recipe.status == 'draft' %} draft{% endif %}">
+      <a href="recipes/{{ recipe.slug }}.html">{{ recipe.name }}</a>
+      <div class="recipe-meta">
+        <span class="badge badge-{{ recipe.status }}">{{ recipe.status }}</span>
+        {% if recipe.prep_time_mins is not none or recipe.cook_time_mins is not none %}
+        <span>{{ (recipe.prep_time_mins or 0) + (recipe.cook_time_mins or 0) }}m</span>
+        {% endif %}
+        {% if recipe.cost_per_serving_usd is not none %}
+        <span>${{ "%.2f"|format(recipe.cost_per_serving_usd) }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</body>
+</html>

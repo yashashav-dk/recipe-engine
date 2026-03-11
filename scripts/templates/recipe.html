@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ recipe.name }} — Recipe Engine</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <a href="../index.html" class="back-link">← all recipes</a>
+  <h1 class="recipe-title">{{ recipe.name }}</h1>
+
+  <div class="recipe-badges">
+    <span class="badge badge-{{ recipe.status }}">{{ recipe.status }}</span>
+    {% if recipe.cuisine %}<span class="meta-badge">{{ recipe.cuisine }}</span>{% endif %}
+    {% if recipe.category %}<span class="meta-badge">{{ recipe.category }}</span>{% endif %}
+    {% for tag in recipe.tags %}<span class="meta-badge">{{ tag }}</span>{% endfor %}
+    {% if recipe.prep_time_mins is not none %}<span class="meta-badge">⏱ {{ recipe.prep_time_mins }}m prep</span>{% endif %}
+    {% if recipe.cook_time_mins is not none %}<span class="meta-badge">🍳 {{ recipe.cook_time_mins }}m cook</span>{% endif %}
+    {% if recipe.cost_per_serving_usd is not none %}<span class="meta-badge">💰 ${{ "%.2f"|format(recipe.cost_per_serving_usd) }}/srv</span>{% endif %}
+    {% if recipe.servings is not none %}<span class="meta-badge">🍽 {{ recipe.servings }} servings</span>{% endif %}
+    {% for e in recipe.equipment %}<span class="meta-badge">{{ e }}</span>{% endfor %}
+  </div>
+
+  {% if recipe.ingredients %}
+  <div class="section">
+    <h2>Ingredients</h2>
+    {% for ing in recipe.ingredients %}
+    <div class="ingredient" onclick="this.classList.toggle('checked'); this.querySelector('input').checked = this.classList.contains('checked');">
+      <input type="checkbox" tabindex="-1">
+      <label>
+        {%- if ing.qty is defined and ing.qty %}{{ ing.qty }} {% endif %}
+        {%- if ing.unit is defined and ing.unit %}{{ ing.unit }} {% endif %}
+        {{- ing.item -}}
+      </label>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if recipe.steps %}
+  <div class="section">
+    <h2>Steps</h2>
+    <ol class="steps">
+      {% for step in recipe.steps %}
+      <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  {% if recipe.storage %}
+  <div class="section">
+    <h2>Storage</h2>
+    <div class="storage-info">
+      {% if recipe.storage.fridge_days %}<p><strong>Fridge:</strong> {{ recipe.storage.fridge_days }} days</p>{% endif %}
+      {% if recipe.storage.freezer_days %}<p><strong>Freezer:</strong> {{ recipe.storage.freezer_days }} days</p>{% endif %}
+      {% if recipe.storage.reheating %}<p><strong>Reheating:</strong> {{ recipe.storage.reheating }}</p>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if recipe.notes %}
+  <div class="section">
+    <h2>Notes</h2>
+    <div class="notes">{{ recipe.notes }}</div>
+  </div>
+  {% endif %}
+</body>
+</html>
