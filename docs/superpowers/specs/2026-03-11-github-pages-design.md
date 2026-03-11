@@ -2,6 +2,17 @@
 
 Static recipe website deployed via GitHub Pages, generated from existing YAML recipe files by extending `generate.py`.
 
+## Prerequisites
+
+This spec depends on the core recipe-engine being implemented first (at minimum: project scaffolding, recipe loader, and `generate.py` from `docs/superpowers/plans/2026-03-11-recipe-engine.md` Chunks 1-2). The GitHub Pages work extends `generate.py` — it cannot be built until that script exists.
+
+## Breaking Changes from Core Spec
+
+This spec intentionally changes two decisions from `docs/superpowers/specs/2026-03-11-recipe-engine-design.md`:
+
+1. **Repo visibility:** Core spec says "Private". This spec changes it to **Public** because free GitHub Pages requires a public repo. The user explicitly approved this change during brainstorming.
+2. **`docs/` directory layout:** Core spec puts markdown at `docs/<slug>.md` (flat). This spec moves markdown to `docs/recipes/<slug>.md` to coexist with HTML files. The existing `docs/spicy-chicken-tikka-masala.md` will be moved during implementation. The core spec should be updated to reflect this new layout.
+
 ## Overview
 
 - **Homepage:** Grouped list of recipes by cuisine, with status/time/cost metadata
@@ -28,7 +39,6 @@ The `docs/` directory serves double duty: GitHub Pages root and existing spec/pl
 
 ### Layout
 - Header: site title
-- Filter links: by cuisine, by tag, by equipment (anchor links to sections on the same page)
 - Recipes grouped by cuisine in a simple list
 - Each row: recipe name (linked to detail page), status badge, prep+cook time, cost/serving
 - Draft recipes shown in muted/dimmed text
@@ -52,9 +62,13 @@ The `docs/` directory serves double duty: GitHub Pages root and existing spec/pl
 
 ### Checkable Ingredients
 - Each ingredient rendered as a checkbox + label
+- Label text constructed from YAML fields: `{qty} {unit} {item}` (e.g., "800 g chicken breast"). If `qty` or `unit` is missing, omit gracefully.
 - Tapping/clicking toggles strikethrough styling
 - State is not persisted — resets on page refresh
 - Implemented with ~10 lines of vanilla JS (inline or single `script.js` file)
+
+### Slug derivation
+- HTML page slugs come from the YAML filename stem (same as core spec): `spicy-chicken-tikka-masala.yaml` → `docs/recipes/spicy-chicken-tikka-masala.html`
 
 ## Styling
 
@@ -70,7 +84,7 @@ The `docs/` directory serves double duty: GitHub Pages root and existing spec/pl
 
 Extend the existing script to output HTML in addition to markdown:
 
-1. **HTML templates** — use `jinja2` for cleaner template rendering (add to `requirements.txt`)
+1. **HTML templates** — use `jinja2` for cleaner template rendering (add to `requirements.txt`). Jinja2 is added because building multi-page HTML with Python string formatting is error-prone and hard to maintain — Jinja2 is lightweight and purpose-built for this.
 2. **Output HTML to `docs/`:**
    - `docs/index.html` — homepage
    - `docs/recipes/<slug>.html` — detail pages
@@ -79,12 +93,17 @@ Extend the existing script to output HTML in addition to markdown:
 
 ### Template files
 
-Store templates in `scripts/templates/`:
+Store Jinja2 templates in `scripts/templates/`:
 ```
 scripts/templates/
-├── index.html        # Homepage template
-├── recipe.html       # Recipe detail template
-└── style.css         # Stylesheet (static, copied to docs/)
+├── index.html        # Homepage Jinja2 template
+├── recipe.html       # Recipe detail Jinja2 template
+```
+
+Store static assets in `scripts/static/`:
+```
+scripts/static/
+├── style.css         # Stylesheet (copied to docs/ as-is, not a template)
 ```
 
 ### Generation flow
@@ -111,6 +130,15 @@ pyyaml
 jinja2
 ```
 
+### README.md updates
+
+The generated `README.md` continues to link to markdown files (now at `docs/recipes/<slug>.md`). It also adds a link at the top to the live GitHub Pages site.
+
+### Required static files
+
+- `docs/.nojekyll` — empty file to disable Jekyll processing on GitHub Pages (prevents interference with static HTML)
+- `docs/index.html` must include `<meta name="viewport" content="width=device-width, initial-scale=1">` for mobile rendering
+
 ## Deployment
 
 1. Make repo public: `gh repo edit --visibility public`
@@ -132,3 +160,4 @@ jinja2
 - CI/CD auto-generation (run generate.py manually for now)
 - Persistent ingredient checkbox state (resets on refresh)
 - Custom domain
+- Custom 404 page (rely on GitHub's default)
