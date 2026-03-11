@@ -128,6 +128,11 @@ def test_generate_readme():
     assert "### draft" in readme
     # Per-appliance section
     assert "Instant Pot Duo" in readme
+    # Links use docs/recipes/ path
+    assert "docs/recipes/chicken-tikka.md" in readme
+    assert "docs/recipes/dal-tadka.md" in readme
+    # Site link
+    assert "yashashav-dk.github.io/recipe-engine" in readme
 
 
 def test_generate_readme_warns_unknown_equipment(capsys):
@@ -183,8 +188,8 @@ def test_generate_cli_integration(tmp_path):
     )
     assert result.returncode == 0
 
-    # Check docs/test-recipe.md was created
-    doc = (docs_dir / "test-recipe.md").read_text()
+    # Check docs/recipes/test-recipe.md was created
+    doc = (docs_dir / "recipes" / "test-recipe.md").read_text()
     assert "# Test Recipe" in doc
 
     # Check README.md was created
@@ -332,3 +337,52 @@ def test_generate_index_html():
     assert "draft" in html
     assert 'href="recipes/chicken-tikka.html"' in html
     assert "viewport" in html
+
+
+def test_generate_cli_outputs_html(tmp_path):
+    """End-to-end: generate.py produces HTML files alongside markdown."""
+    recipes_dir = tmp_path / "recipes"
+    recipes_dir.mkdir()
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    (docs_dir / "superpowers").mkdir(parents=True)  # simulate existing dir
+    (recipes_dir / "test-recipe.yaml").write_text(
+        "name: Test Recipe\nstatus: tested\ncuisine: Indian\n"
+        "servings: 4\ncost_per_serving_usd: 1.50\n"
+        "ingredients:\n  - item: rice\n    qty: 500\n    unit: g\n"
+        "steps:\n  - Cook rice\n"
+    )
+    equip_file = tmp_path / "equipment.yaml"
+    equip_file.write_text(
+        "appliances:\n  - id: instant-pot\n    name: Instant Pot\n"
+    )
+    script = Path(__file__).parent.parent / "scripts" / "generate.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--root", str(tmp_path)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0
+
+    # HTML files created
+    assert (docs_dir / "index.html").exists()
+    assert (docs_dir / "recipes" / "test-recipe.html").exists()
+    assert (docs_dir / "style.css").exists()
+
+    # Markdown files in new location
+    assert (docs_dir / "recipes" / "test-recipe.md").exists()
+
+    # Check HTML content
+    html = (docs_dir / "recipes" / "test-recipe.html").read_text()
+    assert "Test Recipe" in html
+    assert "checkbox" in html
+    assert "500 g rice" in html
+
+    # Check index
+    index = (docs_dir / "index.html").read_text()
+    assert "Test Recipe" in index
+    assert "Indian" in index
+
+    # Check README has site link
+    readme = (tmp_path / "README.md").read_text()
+    assert "Test Recipe" in readme

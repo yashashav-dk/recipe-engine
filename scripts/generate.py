@@ -94,6 +94,8 @@ def generate_readme(
 ):
     """Generate README.md content with index table and grouped views."""
     lines = ["# Recipe Engine", ""]
+    lines.append("[View recipe site](https://yashashav-dk.github.io/recipe-engine/)")
+    lines.append("")
     lines.append("Personal batch cooking recipe collection.")
     lines.append("")
 
@@ -133,7 +135,7 @@ def generate_readme(
     lines.append("| Name | Cuisine | Status | Prep | Cook | Cost/serving | Tags |")
     lines.append("|------|---------|--------|------|------|-------------|------|")
     for r in recipes:
-        name_link = f"[{r['name']}](docs/{r['slug']}.md)"
+        name_link = f"[{r['name']}](docs/recipes/{r['slug']}.md)"
         cuisine = r["cuisine"] or ""
         status = r["status"]
         prep = f"{r['prep_time_mins']}m" if r["prep_time_mins"] else ""
@@ -155,7 +157,7 @@ def generate_readme(
             lines.append(f"### {cuisine}")
             lines.append("")
             for r in by_cuisine[cuisine]:
-                lines.append(f"- [{r['name']}](docs/{r['slug']}.md)")
+                lines.append(f"- [{r['name']}](docs/recipes/{r['slug']}.md)")
             lines.append("")
 
     # Grouped by status
@@ -169,7 +171,7 @@ def generate_readme(
             lines.append(f"### {status}")
             lines.append("")
             for r in by_status[status]:
-                lines.append(f"- [{r['name']}](docs/{r['slug']}.md)")
+                lines.append(f"- [{r['name']}](docs/recipes/{r['slug']}.md)")
             lines.append("")
 
     # Grouped by tag
@@ -184,7 +186,7 @@ def generate_readme(
             lines.append(f"### {tag}")
             lines.append("")
             for r in by_tag[tag]:
-                lines.append(f"- [{r['name']}](docs/{r['slug']}.md)")
+                lines.append(f"- [{r['name']}](docs/recipes/{r['slug']}.md)")
             lines.append("")
 
     # Per-appliance sections
@@ -201,7 +203,7 @@ def generate_readme(
             lines.append(f"### {equip_name}")
             lines.append("")
             for r in by_equip[eid]:
-                lines.append(f"- [{r['name']}](docs/{r['slug']}.md)")
+                lines.append(f"- [{r['name']}](docs/recipes/{r['slug']}.md)")
             lines.append("")
 
     return "\n".join(lines)
@@ -250,7 +252,7 @@ def generate_index_html(recipes):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate markdown docs from recipe YAML files")
+    parser = argparse.ArgumentParser(description="Generate markdown docs and HTML site from recipe YAML files")
     parser.add_argument(
         "--root",
         type=Path,
@@ -262,18 +264,35 @@ def main():
     root = args.root
     recipes_dir = root / "recipes"
     docs_dir = root / "docs"
+    recipes_docs_dir = docs_dir / "recipes"
     equip_path = root / "equipment.yaml"
+    static_dir = Path(__file__).parent / "static"
 
     docs_dir.mkdir(exist_ok=True)
+    recipes_docs_dir.mkdir(exist_ok=True)
 
     # Load data
     recipes = load_all_recipes(recipes_dir)
     equipment = load_equipment(equip_path)
 
-    # Generate per-recipe markdown
+    # Generate per-recipe markdown (now in docs/recipes/)
     for recipe in recipes:
         md = recipe_to_markdown(recipe)
-        (docs_dir / f"{recipe['slug']}.md").write_text(md)
+        (recipes_docs_dir / f"{recipe['slug']}.md").write_text(md)
+
+    # Generate per-recipe HTML
+    for recipe in recipes:
+        html = generate_recipe_html(recipe)
+        (recipes_docs_dir / f"{recipe['slug']}.html").write_text(html)
+
+    # Generate index HTML
+    index_html = generate_index_html(recipes)
+    (docs_dir / "index.html").write_text(index_html)
+
+    # Copy static assets
+    if static_dir.exists():
+        for f in static_dir.iterdir():
+            shutil.copy2(f, docs_dir / f.name)
 
     # Generate README
     readme = generate_readme(recipes, equipment["all_ids"], equipment["by_id"])
