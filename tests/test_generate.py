@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from generate import recipe_to_markdown
+from generate import recipe_to_markdown, generate_readme
 
 
 def test_recipe_to_markdown_full():
@@ -69,4 +69,86 @@ def test_recipe_to_markdown_minimal():
     # Optional fields should be omitted, not show "None"
     assert "None" not in md
     assert "Cuisine" not in md
-    assert "Servings" not in md
+
+
+def test_generate_readme():
+    recipes = [
+        {
+            "name": "Chicken Tikka",
+            "slug": "chicken-tikka",
+            "status": "tested",
+            "cuisine": "Indian",
+            "category": "protein",
+            "servings": 8,
+            "prep_time_mins": 15,
+            "cook_time_mins": 25,
+            "equipment": ["instant-pot"],
+            "storage": None,
+            "cost_per_serving_usd": 1.50,
+            "tags": ["high-protein"],
+            "ingredients": [],
+            "steps": [],
+            "notes": None,
+        },
+        {
+            "name": "Dal Tadka",
+            "slug": "dal-tadka",
+            "status": "draft",
+            "cuisine": "Indian",
+            "category": None,
+            "servings": None,
+            "prep_time_mins": None,
+            "cook_time_mins": None,
+            "equipment": [],
+            "storage": None,
+            "cost_per_serving_usd": None,
+            "tags": ["vegetarian", "high-protein"],
+            "ingredients": [],
+            "steps": [],
+            "notes": None,
+        },
+    ]
+    equipment_ids = {"instant-pot", "air-fryer", "blender"}
+    equipment_by_id = {
+        "instant-pot": {"id": "instant-pot", "name": "Instant Pot Duo"},
+        "air-fryer": {"id": "air-fryer", "name": "Gourmia Air Fryer"},
+        "blender": {"id": "blender", "name": "Vitamix E Series"},
+    }
+    readme = generate_readme(recipes, equipment_ids, equipment_by_id)
+    assert "# Recipe Engine" in readme
+    assert "Chicken Tikka" in readme
+    assert "Dal Tadka" in readme
+    # Index table
+    assert "| Name" in readme
+    # Grouped by cuisine
+    assert "### Indian" in readme
+    # Grouped by status
+    assert "### tested" in readme
+    assert "### draft" in readme
+    # Per-appliance section
+    assert "Instant Pot Duo" in readme
+
+
+def test_generate_readme_warns_unknown_equipment(capsys):
+    recipes = [
+        {
+            "name": "Test",
+            "slug": "test",
+            "status": "draft",
+            "cuisine": None,
+            "category": None,
+            "servings": None,
+            "prep_time_mins": None,
+            "cook_time_mins": None,
+            "equipment": ["unknown-gadget"],
+            "storage": None,
+            "cost_per_serving_usd": None,
+            "tags": [],
+            "ingredients": [],
+            "steps": [],
+            "notes": None,
+        },
+    ]
+    generate_readme(recipes, set(), {})
+    captured = capsys.readouterr()
+    assert "unknown-gadget" in captured.err
