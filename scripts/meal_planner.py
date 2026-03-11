@@ -39,3 +39,57 @@ def filter_recipes(
         ]
 
     return filtered
+
+
+def select_meals(
+    recipes,
+    servings_per_day=3,
+    max_budget=None,
+):
+    """Pick recipes to fill weekly servings target. Random selection, avoids repeats when possible."""
+    target_servings = servings_per_day * 7
+    selected = []
+    current_servings = 0
+    current_cost = 0.0
+    available = list(recipes)
+    random.shuffle(available)
+
+    for recipe in available:
+        if current_servings >= target_servings:
+            break
+        recipe_cost = recipe["servings"] * recipe["cost_per_serving_usd"]
+        if max_budget is not None and current_cost + recipe_cost > max_budget:
+            continue
+        selected.append(recipe)
+        current_servings += recipe["servings"]
+        current_cost += recipe_cost
+
+    # If we haven't hit target, repeat recipes until target met or no progress possible
+    while current_servings < target_servings:
+        made_progress = False
+        pool = list(recipes)
+        random.shuffle(pool)
+        for recipe in pool:
+            if current_servings >= target_servings:
+                break
+            recipe_cost = recipe["servings"] * recipe["cost_per_serving_usd"]
+            if max_budget is not None and current_cost + recipe_cost > max_budget:
+                continue
+            selected.append(recipe)
+            current_servings += recipe["servings"]
+            current_cost += recipe_cost
+            made_progress = True
+        if not made_progress:
+            break
+
+    return selected
+
+
+def build_shopping_list(selected):
+    """Combine ingredients across selected recipes. Dedup by exact (item, unit) match."""
+    shopping = defaultdict(float)
+    for recipe in selected:
+        for ing in recipe.get("ingredients", []):
+            key = (ing["item"], ing.get("unit", ""))
+            shopping[key] += ing.get("qty", 0)
+    return dict(shopping)
