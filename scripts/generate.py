@@ -1,9 +1,12 @@
 """Generates markdown docs and README from recipe YAML files."""
 
 import argparse
+import shutil
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+from jinja2 import Environment, FileSystemLoader
 
 from loader import load_all_recipes, load_equipment
 
@@ -202,6 +205,48 @@ def generate_readme(
             lines.append("")
 
     return "\n".join(lines)
+
+
+STATUS_ORDER = {"staple": 0, "tested": 1, "draft": 2}
+
+
+def _get_jinja_env():
+    """Create Jinja2 environment pointing at scripts/templates/."""
+    templates_dir = Path(__file__).parent / "templates"
+    return Environment(loader=FileSystemLoader(str(templates_dir)))
+
+
+def generate_recipe_html(recipe):
+    """Render a single recipe as an HTML page using the recipe.html template."""
+    env = _get_jinja_env()
+    template = env.get_template("recipe.html")
+    return template.render(recipe=recipe)
+
+
+def generate_index_html(recipes):
+    """Render the homepage HTML with recipes grouped by cuisine."""
+    env = _get_jinja_env()
+    template = env.get_template("index.html")
+
+    # Group by cuisine
+    by_cuisine = defaultdict(list)
+    for r in recipes:
+        cuisine = r["cuisine"] or "Other"
+        by_cuisine[cuisine].append(r)
+
+    # Sort within each group: by status order, then alphabetically
+    for cuisine in by_cuisine:
+        by_cuisine[cuisine].sort(
+            key=lambda r: (STATUS_ORDER.get(r["status"], 9), r["name"])
+        )
+
+    # Sort cuisine groups alphabetically, but "Other" goes last
+    groups = sorted(
+        by_cuisine.items(),
+        key=lambda x: (x[0] == "Other", x[0]),
+    )
+
+    return template.render(groups=groups)
 
 
 def main():

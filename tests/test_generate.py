@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from generate import recipe_to_markdown, generate_readme
+from generate import generate_recipe_html, generate_index_html
 
 
 def test_recipe_to_markdown_full():
@@ -189,3 +190,145 @@ def test_generate_cli_integration(tmp_path):
     # Check README.md was created
     readme = (tmp_path / "README.md").read_text()
     assert "Test Recipe" in readme
+
+
+def test_generate_recipe_html():
+    recipe = {
+        "name": "Chicken Tikka",
+        "slug": "chicken-tikka",
+        "status": "tested",
+        "cuisine": "Indian",
+        "category": "protein",
+        "servings": 8,
+        "prep_time_mins": 15,
+        "cook_time_mins": 25,
+        "equipment": ["instant-pot"],
+        "storage": {
+            "fridge_days": 5,
+            "freezer_days": 30,
+            "reheating": "Microwave 2-3 mins",
+        },
+        "cost_per_serving_usd": 1.50,
+        "tags": ["high-protein", "spicy"],
+        "ingredients": [
+            {"item": "chicken breast", "qty": 800, "unit": "g"},
+            {"item": "yogurt", "qty": 250, "unit": "ml"},
+            {"item": "onion", "qty": 2},
+        ],
+        "steps": [
+            "Cut chicken into chunks",
+            "Marinate in yogurt",
+        ],
+        "notes": "Day 2-3 tastes best.",
+    }
+    html = generate_recipe_html(recipe)
+    assert "<!DOCTYPE html>" in html
+    assert "<title>Chicken Tikka" in html
+    assert "tested" in html
+    assert "Indian" in html
+    assert "800 g chicken breast" in html
+    assert "250 ml yogurt" in html
+    assert "2 onion" in html  # qty without unit
+    assert "checkbox" in html
+    assert "Cut chicken into chunks" in html
+    assert "Fridge" in html
+    assert "Day 2-3 tastes best." in html
+    assert 'href="../style.css"' in html
+    assert 'href="../index.html"' in html
+    assert "viewport" in html
+
+
+def test_generate_recipe_html_minimal():
+    recipe = {
+        "name": "Quick Idea",
+        "slug": "quick-idea",
+        "status": "draft",
+        "cuisine": None,
+        "category": None,
+        "servings": None,
+        "prep_time_mins": None,
+        "cook_time_mins": None,
+        "equipment": [],
+        "storage": None,
+        "cost_per_serving_usd": None,
+        "tags": [],
+        "ingredients": [],
+        "steps": [],
+        "notes": None,
+    }
+    html = generate_recipe_html(recipe)
+    assert "Quick Idea" in html
+    assert "draft" in html
+    # Optional sections should not appear
+    assert "Ingredients" not in html
+    assert "Steps" not in html
+    assert "Storage" not in html
+    assert "Notes" not in html
+    assert "None" not in html
+
+
+def test_generate_index_html():
+    recipes = [
+        {
+            "name": "Chicken Tikka",
+            "slug": "chicken-tikka",
+            "status": "tested",
+            "cuisine": "Indian",
+            "category": "protein",
+            "servings": 8,
+            "prep_time_mins": 15,
+            "cook_time_mins": 25,
+            "equipment": [],
+            "storage": None,
+            "cost_per_serving_usd": 1.50,
+            "tags": [],
+            "ingredients": [],
+            "steps": [],
+            "notes": None,
+        },
+        {
+            "name": "Smoothie",
+            "slug": "smoothie",
+            "status": "staple",
+            "cuisine": None,
+            "category": "drink",
+            "servings": 2,
+            "prep_time_mins": 5,
+            "cook_time_mins": 0,
+            "equipment": [],
+            "storage": None,
+            "cost_per_serving_usd": 2.00,
+            "tags": [],
+            "ingredients": [],
+            "steps": [],
+            "notes": None,
+        },
+        {
+            "name": "Dal Tadka",
+            "slug": "dal-tadka",
+            "status": "draft",
+            "cuisine": "Indian",
+            "category": None,
+            "servings": None,
+            "prep_time_mins": None,
+            "cook_time_mins": None,
+            "equipment": [],
+            "storage": None,
+            "cost_per_serving_usd": None,
+            "tags": [],
+            "ingredients": [],
+            "steps": [],
+            "notes": None,
+        },
+    ]
+    html = generate_index_html(recipes)
+    assert "<!DOCTYPE html>" in html
+    assert "Recipe Engine" in html
+    assert "Indian" in html
+    assert "Other" in html  # Smoothie has no cuisine
+    assert "Chicken Tikka" in html
+    assert "Smoothie" in html
+    assert "Dal Tadka" in html
+    assert "draft" in html
+    assert 'href="recipes/chicken-tikka.html"' in html
+    assert "viewport" in html
