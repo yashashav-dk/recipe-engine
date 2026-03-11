@@ -176,3 +176,56 @@ def test_build_shopping_list():
     assert shopping[("chicken thighs", "g")] == 800
     assert shopping[("yogurt", "ml")] == 250
     assert shopping[("rice", "g")] == 500
+
+
+from meal_planner import format_plan
+
+
+def test_format_plan():
+    selected = [
+        {
+            "name": "Chicken Tikka",
+            "servings": 8,
+            "prep_time_mins": 15,
+            "cook_time_mins": 25,
+            "cost_per_serving_usd": 1.50,
+            "storage": {"fridge_days": 5, "freezer_days": 30},
+            "ingredients": [
+                {"item": "chicken thighs", "qty": 900, "unit": "g"},
+                {"item": "yogurt", "qty": 250, "unit": "ml"},
+            ],
+        },
+    ]
+    output = format_plan(selected)
+    assert "Chicken Tikka" in output
+    assert "Shopping List" in output
+    assert "900 g chicken thighs" in output
+    assert "Cook Schedule" in output
+    assert "Storage Plan" in output
+
+
+def test_meal_planner_cli_integration(tmp_path):
+    """End-to-end test: run meal_planner.py against sample recipes."""
+    import subprocess
+    recipes_dir = tmp_path / "recipes"
+    recipes_dir.mkdir()
+    (recipes_dir / "test-meal.yaml").write_text(
+        "name: Test Meal\nstatus: tested\nservings: 8\n"
+        "cost_per_serving_usd: 1.50\n"
+        "ingredients:\n  - item: rice\n    qty: 500\n    unit: g\n"
+    )
+    equip_file = tmp_path / "equipment.yaml"
+    equip_file.write_text(
+        "appliances:\n  - id: instant-pot\n    name: Instant Pot\n"
+    )
+
+    script = Path(__file__).parent.parent / "scripts" / "meal_planner.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--root", str(tmp_path), "--seed", "42"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0
+    assert "WEEKLY BATCH COOKING PLAN" in result.stdout
+    assert "Test Meal" in result.stdout
+    assert "Shopping List" in result.stdout
