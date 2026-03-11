@@ -1,0 +1,14 @@
+name: Dal Tadka
+status: draft
+cuisine: Indian
+tags:
+  - vegetarian
+  - high-protein
+ingredients:
+  - item: toor dal
+    qty: 500
+    unit: g
+  - item: onion
+    qty: 2
+    unit: piece
+notes: "Need to figure out exact instant pot timing"

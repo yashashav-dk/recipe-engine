@@ -8,9 +8,6 @@ appliances:
     size: medium
   - id: blender
     name: Vitamix E Series
-  - id: magic-bullet
-    name: Magic Bullet
-    notes: "Great for small batches — spice pastes, ginger garlic paste, onion puree"
 
 containers:
   - id: glass-2l
