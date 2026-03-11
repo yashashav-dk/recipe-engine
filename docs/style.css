@@ -49,6 +49,15 @@ a:hover {
 .site-header h1 {
   color: var(--accent);
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-icon {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
 }
 
 /* Cuisine group */
