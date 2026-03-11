@@ -25,6 +25,7 @@
 - 45 ml oil
 - 2 g kasuri methi
 - 10 g salt
+- 250 g great value frozen spinach
 
 ## Steps
 
@@ -41,8 +42,9 @@
 11. Close lid: Pressure Cook High, 5 minutes. (Do NOT exceed 5 mins — breast goes rubbery.)
 12. Quick release after 5 mins.
 13. Open lid: Sauté mode again. Simmer 8-10 mins to reduce gravy to preferred thickness.
-14. Stir in 3 tbsp Greek yogurt (60ml) + 5g garam masala + a pinch of kasuri methi. Stir 1 min. Cancel and done.
-15. Let cool 30 mins (do not exceed 2 hours). Split into two 2L glass containers. Fridge immediately.
+14. Add 250g frozen spinach. Stir and let it wilt into the gravy for 2 mins.
+15. Stir in 3 tbsp Greek yogurt (60ml) + 5g garam masala + a pinch of kasuri methi. Stir 1 min. Cancel and done.
+16. Let cool 30 mins (do not exceed 2 hours). Split into two 2L glass containers. Fridge immediately.
 
 ## Storage
 
