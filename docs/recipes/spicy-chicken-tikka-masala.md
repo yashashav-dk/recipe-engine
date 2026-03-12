@@ -27,6 +27,8 @@
 - 4 tsp salt
 - 0.5 tsp sugar
 - 250 g great value frozen spinach
+- 2 bay leaf
+- 3 green chillies
 
 ## Steps
 
@@ -34,11 +36,11 @@
 2. Marinate in a bowl: ½ cup Greek yogurt + 1 tbsp Three Mangoes Chicken Masala + 1 tsp Kashmiri chilli powder + 1 tsp turmeric + 1 tsp salt. Mix well, set aside while you prep the base.
 3. Dice 4 large onions (~600g). Blend in the Magic Bullet to a coarse paste (not too smooth).
 4. Make ginger garlic paste in the Magic Bullet if not pre-made (~2 tbsp total).
-5. Instant Pot: Sauté mode, high. Add 4 tbsp oil, let it heat up.
+5. Instant Pot: Sauté mode, high. Add 4 tbsp oil, let it heat up. Add 2 bay leaves — they should sizzle on contact.
 6. Add onion paste + 1 tsp salt. Cook 15 mins stirring every 2-3 mins until deep golden brown and oil separates at the edges. Do NOT rush — this is where 70% of the flavor comes from. Reduce to medium if it starts catching.
 7. Add 2 tbsp ginger garlic paste. Stir 1-2 mins until raw smell goes.
 8. Add 3 tsp Kashmiri chilli powder + 2 tsp red chilli powder + 1 tbsp Three Mangoes Chicken Masala + 2 tsp salt. Stir 1 min to bloom spices in the oil — they should darken and become fragrant.
-9. Pour in ⅔ of the 29oz tomato puree can (~550g) + ½ tsp sugar. Stir well. Cook on sauté 5-6 mins until oil separates again. The masala should look glossy and come away from the sides.
+9. Pour in ⅔ of the 29oz tomato puree can (~550g) + ½ tsp sugar + 3 slit green chillies. Stir well. Cook on sauté 5-6 mins until oil separates again. The masala should look glossy and come away from the sides.
 10. Cancel sauté. Add marinated chicken pieces. Stir to coat in gravy.
 11. Close lid: Pressure Cook High, 5 minutes. (Do NOT exceed 5 mins — breast goes rubbery.)
 12. Quick release after 5 mins.
@@ -56,5 +58,5 @@
 
 ## Notes
 
-Day 2-3 tastes best as spices meld. Gravy thickens in fridge overnight — normal, add water when reheating. Browning the onion paste (step 6) is where 70% of the flavor comes from — 15 mins minimum. Use ⅔ of the 29oz can — full can makes it too tomatoey and dilutes spices. The air fryer char step is what makes this tikka masala, not just butter chicken. Season slightly more than tastes perfect — meal prep dulls flavors over days. Serve with quinoa or ready-made chapathi. Three Mangoes Chicken Masala from Swastik Spices adds the Telugu-style spice base. Grocery: Walmart Great Value tomato puree + Greek yogurt + frozen spinach. Everything else from pantry.
+Day 2-3 tastes best as spices meld. Gravy thickens in fridge overnight — normal, add water when reheating. Browning the onion paste (step 6) is where 70% of the flavor comes from — 15 mins minimum. Use ⅔ of the 29oz can — full can makes it too tomatoey and dilutes spices. The air fryer char step is what makes this tikka masala, not just butter chicken. Season slightly more than tastes perfect — meal prep dulls flavors over days. Serve with quinoa or ready-made chapathi. Three Mangoes Chicken Masala from Swastik Spices adds the Telugu-style spice base. Remove bay leaves before storing. Slit green chillies lengthwise — seeds stay inside for moderate heat that cooks into the gravy. Grocery: Walmart Great Value tomato puree + Greek yogurt + frozen spinach. Everything else from pantry.
 
