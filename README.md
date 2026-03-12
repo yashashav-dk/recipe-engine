@@ -8,7 +8,7 @@ Personal batch cooking recipe collection.
 
 | Name | Cuisine | Status | Prep | Cook | Cost/serving | Tags |
 |------|---------|--------|------|------|-------------|------|
-| [Spicy Chicken Tikka Masala](docs/recipes/spicy-chicken-tikka-masala.md) | Indian | draft | 15m | 25m | $0.60 | high-protein, spicy, meal-prep, batch-cooking, budget |
+| [Spicy Chicken Tikka Masala](docs/recipes/spicy-chicken-tikka-masala.md) | Indian | draft | 20m | 40m | $0.60 | high-protein, spicy, meal-prep, batch-cooking, budget |
 
 ## By Cuisine
 
@@ -45,6 +45,10 @@ Personal batch cooking recipe collection.
 - [Spicy Chicken Tikka Masala](docs/recipes/spicy-chicken-tikka-masala.md)
 
 ## By Equipment
+
+### Gourmia Air Fryer
+
+- [Spicy Chicken Tikka Masala](docs/recipes/spicy-chicken-tikka-masala.md)
 
 ### Instant Pot Duo
 
